@@ -60,8 +60,11 @@ let
       ${optionalString (allowInterfaces != null) "allowinterfaces ${toString allowInterfaces}"}
 
       # Immediately fork to background if specified, otherwise wait for IP address to be assigned
-      ${optionalString cfg.background "background"}
-      ${optionalString (!cfg.background) "waitip"}
+      ${optionalString (cfg.wait == "background") "background" }
+      ${optionalString (cfg.wait == "any") "waitip" }
+      ${optionalString (cfg.wait == "IPv4") "waitip 4" }
+      ${optionalString (cfg.wait == "IPv6") "waitip 6" }
+      ${optionalString (cfg.wait == "both") "waitip 4\nwaitip 6" }
 
       ${cfg.extraConfig}
     '';
@@ -150,13 +153,16 @@ in
       '';
     };
 
-    networking.dhcpcd.background = mkOption {
-      type = types.bool;
-      default = false;
+    networking.dhcpcd.wait = mkOption {
+      type = types.enum [ "background" "any" "IPv4" "IPv6" "both" ];
+      default = "any";
       description = ''
-        If set to true, dhcpcd will immediately fork to background
-        without waiting for an IP address to be assigned. This can
-        decrease startup time.
+        This option specifies when the dhcpcd service will fork to background.
+        If set to "background", dhcpcd will fork to background immediately.
+        If set to "ipv4" or "ipv6", dhcpcd will wait for the corresponding IP
+        address to be assigned. If set to "any", dhcpcd will wait for any type
+        (IPv4 or IPv6) to be assigned. If set to "both", dhcpcd will wait for
+        both an IPv4 and an IPv6 address before forking.
       '';
     };
 
