@@ -60,11 +60,13 @@ let
       ${optionalString (allowInterfaces != null) "allowinterfaces ${toString allowInterfaces}"}
 
       # Immediately fork to background if specified, otherwise wait for IP address to be assigned
-      ${optionalString (cfg.wait == "background") "background" }
-      ${optionalString (cfg.wait == "any") "waitip" }
-      ${optionalString (cfg.wait == "IPv4") "waitip 4" }
-      ${optionalString (cfg.wait == "IPv6") "waitip 6" }
-      ${optionalString (cfg.wait == "both") "waitip 4\nwaitip 6" }
+      ${{
+        background = "background";
+        any = "waitip";
+        IPv4 = "waitip 4";
+        IPv6 = "waitip 6";
+        both = "waitip 4\nwaitip 6";
+      }.${cfg.wait}};
 
       ${cfg.extraConfig}
     '';
