@@ -66,7 +66,7 @@ let
         IPv4 = "waitip 4";
         IPv6 = "waitip 6";
         both = "waitip 4\nwaitip 6";
-      }.${cfg.wait}};
+      }.${cfg.wait}}
 
       ${cfg.extraConfig}
     '';
