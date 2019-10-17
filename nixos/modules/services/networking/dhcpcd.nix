@@ -66,6 +66,7 @@ let
         IPv4 = "waitip 4";
         IPv6 = "waitip 6";
         both = "waitip 4\nwaitip 6";
+        default = "";
       }.${cfg.wait}}
 
       ${cfg.extraConfig}
@@ -156,7 +157,7 @@ in
     };
 
     networking.dhcpcd.wait = mkOption {
-      type = types.enum [ "background" "any" "IPv4" "IPv6" "both" ];
+      type = types.enum [ "background" "any" "IPv4" "IPv6" "both" "if-carrier-up" ];
       default = "any";
       description = ''
         This option specifies when the dhcpcd service will fork to background.
@@ -165,6 +166,8 @@ in
         address to be assigned. If set to "any", dhcpcd will wait for any type
         (IPv4 or IPv6) to be assigned. If set to "both", dhcpcd will wait for
         both an IPv4 and an IPv6 address before forking.
+        The option "if-carrier-up" is equivalent to "any" if either ethernet
+        is plugged nor WiFi is powered, and to "background" otherwise.
       '';
     };
 
