@@ -66,7 +66,7 @@ let
         IPv4 = "waitip 4";
         IPv6 = "waitip 6";
         both = "waitip 4\nwaitip 6";
-        default = "";
+        if-carrier-up = "";
       }.${cfg.wait}}
 
       ${cfg.extraConfig}
